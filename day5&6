@@ -39,3 +39,64 @@ clearInterval(idInterval);
 *     Create and read directories, and explore directory manipulation functions
 
 */
+
+//Asynchronous reading
+
+const fs = require('node:fs')
+
+fs.readFile('hello.txt', 'utf-8', (err, data) => {
+    if (err) {
+        console.error(err);
+        return
+    }
+    console.log(data);
+})
+
+//Asynchronous writing
+
+const content = "Some content"
+fs.writeFile('hello.txt', content, err => {
+    if (err) {
+        console.error(err)
+        return
+    } else {
+        console.log('File written successfully')
+    }
+})
+
+//Synchronous reading
+
+try {
+    const data = fs.readFileSync('hello.txt')
+    console.log(data);
+} catch (err) { 
+    console.error(err)
+}
+// By default it overwrites
+// Synchronous wrting
+try {
+    fs.writeFileSync('hello.txt', content);
+    console.log('file written successfully')
+} catch (err) {
+    console.error(err)
+}
+
+//To avoid overwriting add the { flag: a+} (to append a file)
+fs.writeFile('hello.txt', content , { flag: 'a+'}, err => {
+    if (err) {
+        console.error(err)
+        return
+    } else {
+        console.log('File written successfully')
+    }
+})
+
+try {
+    fs.writeFileSync('hello.txt', content, { flag: 'a+'})
+    console.log('file successfully written')
+} catch (err) {
+    console.err(err)
+}
+// Using the above solution: This means that big files are going to have a major impact on your memory consumption and speed of execution of the program.
+
+// In this case, a better option is to read the file content using streams.
