@@ -1,0 +1,41 @@
+/* Goal: 
+* Use timers in Node.js to execute functions after a delay or repeatedly
+*
+*Tasks: 
+*    Executes a function after a delay using setTimeout()
+* Executes a function repeatedly with a delay between each call using setInterval()
+*    Stop a timeout and interval from running using clearTimeout() and clearInterval()
+
+*/
+
+setTimeout(() => {
+    console.log("Delay in one second ...");
+}, 1000)
+
+setInterval(() => {
+    console.log("Delay in one second ...");
+}, 1000)
+
+const idTimeout = setTimeout(() => {
+    console.log("Delay in one second ...");
+})
+clearTimeout(idTimeout);
+
+const idInterval = setInterval(() => {
+    console.log("Delay in one second ...");
+})
+clearInterval(idInterval);
+
+/* Day 6 - File System Module Basics
+
+* Node.js provides a built-in module, fs (File System), to interact with the file system. Explore how to read, write, and manage files and directories.
+
+
+* Tasks:
+
+*     Read and write text files using both synchronous and asynchronous methods
+*     Append data to files
+*     Handle common file errors
+*     Create and read directories, and explore directory manipulation functions
+
+*/
