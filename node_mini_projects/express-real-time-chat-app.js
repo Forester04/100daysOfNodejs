@@ -1,9 +1,9 @@
-const fs = require('fs');
-const express = require('express');
-const EventEmitter = require('events');
+const fs = require('fs')
+const express = require('express')
+const EventEmitter = require('events')
 
 const chatEmitter = new EventEmitter()
-const port = process.env.PORT | 3000
+const port = process.env.PORT || 1337
 
 const app = express()
 
@@ -13,19 +13,21 @@ app.get('/echo', respondEcho)
 app.get('/static/*', respondStatic)
 app.get('/chat', respondChat)
 app.get('/sse', respondSSE)
+app.get('/previous', respondPrevious)
 
 
-app.listen(port, () => console.log(`Server listening on ${port}`));
+
+app.listen(port, () => console.log(`Server listening on ${port}`))
 
 function respondText(req, res) {
-    res.setHeader('Content-Type', 'text/plain');
-    res.end('Real-Time Chat App');
+    res.setHeader('Content-Type', 'text/plain')
+    res.end('Happy to print my first server')
 }
 function respondJson(req, res) {
-    res.json({name: 'Real-Time Chat App', version: '1.01'});
+    res.json({ text: 'Forester', number: [1, 2, 3, 4]})
 }
 function respondEcho(req, res) {
-    const { input = ''} = req.query
+    const {input = ''} = req.query
 
     res.json({
         normal: input,
@@ -38,34 +40,40 @@ function respondEcho(req, res) {
     })
 }
 function respondStatic(req, res) {
-    const filename = `${__dirname}/public/${req.params[0]}`
+    const filename = `${__dirname}/mini-real-time-chat/public/${req.params[0]}`
     fs.createReadStream(filename)
     .on('error', () => respondNotFound(req, res))
     .pipe(res)
 }
-
 function respondChat(req, res) {
     const { message } = req.query
 
-    chatEmitter.emit('message', message);
+    chatEmitter.emit('message', message)
     res.end()
 }
-
 function respondSSE(req, res) {
     res.writeHead(200, {
         'Content-Type' : 'text/event-stream',
         'Connection' : 'keep-alive'
     })
 
-    const onMessage = msg => res.write(`data: ${msg}\n\n`);
-    chatEmitter.on('message', onMessage);
+    const onMessage = msg => res.write(`data: ${msg}\n\n`)
+    chatEmitter.on('message', onMessage)
 
     res.on('close', function () {
-    chatEmitter.off('message', onMessage);
-    })
+    chatEmitter.off('message', onMessage)
+})
+}
+function respondPrevious(req, res) {
+    const { message } = req.query
+
+    fs.appendFile()
 }
 
+
 function respondNotFound(req, res) {
-    res.writeHead(404, {'Content-Type' : 'text/plain'});
-    res.end('Page Not Found');
+    res.writeHead(404, {'Content-Type' : 'text/plain'})
+    res.end('Not Found')
 }
+console.log(__dirname)
+console.log(__filename);

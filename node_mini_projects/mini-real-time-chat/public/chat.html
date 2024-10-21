@@ -1,35 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=z, initial-scale=1.0">
-    <title>Real Time Chat App</title>
-</head>
-<body>
-    
-</body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chat App</title>
   <style>
-    body { 
-        margin: 50px auto
+    .container { 
+        margin: 0 auto
     }
   </style>
 </head>
 <body>
-  <div class="" id="messages">
-    <h4>Chat messages</h4>
-  </div>
-  <form id="form">
-    <input type="text" id="input" placeholder="Your message...">
-  </form>
-  <div id="previous">
-    <h4>Previous Chat history</h4>
-  </div>
+  <section class="container">
+    <div class="" id="messages">
+      <h4>Chat messages</h4>
+    </div>
+    <form id="form">
+      <input type="text" id="input" placeholder="Your message...">
+    </form>
+    <div id="previous">
+      <h4>Previous Chat history</h4>
+    </div>
+  </section>
   <script>
     new window.EventSource('/sse').onmessage = function (event) {
     window.messages.innerHTML += `<p>${event.data}<p>`
