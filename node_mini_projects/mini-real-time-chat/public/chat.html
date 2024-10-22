@@ -18,21 +18,45 @@
     <form id="form">
       <input type="text" id="input" placeholder="Your message...">
     </form>
-    <div id="previous">
-      <h4>Previous Chat history</h4>
-    </div>
   </section>
   <script>
-    new window.EventSource('/sse').onmessage = function (event) {
-    window.messages.innerHTML += `<p>${event.data}<p>`
-    }
+    // Step 1: Fetch and display previous chat messages when the page loads
+    window.addEventListener('load', function () {
+      // Fetch previous messages from the server
+      window.fetch('/previous')
+          .then(response => response.text())
+          .then(previousMessages => {
+              // Append the previous messages to the chat window
+              if (previousMessages.trim()) { // Only add if there's content
+                  window.messages.innerHTML += `<p>Previous Chats:</p>`;
+                  window.messages.innerHTML += previousMessages
+                      .split('\n')
+                      .filter(Boolean) // Remove any empty lines
+                      .map(message => `<p>${message}</p>`) // Format each message as a paragraph
+                      .join('');
+              }
+          })
+          .catch(err => console.error('Failed to fetch previous messages:', err));
+      
+      // Step 2: Set up real-time updates with SSE
+      const eventSource = new window.EventSource('/sse');
+      eventSource.onmessage = function (event) {
+          // Append new messages received from the SSE server to the chat window
+          window.messages.innerHTML += `<p>${event.data}</p>`;
+      };
+    });
 
-    window.form.addEventListener('submit', function(evt) {
-        evt.preventDefault()
+// Step 3: Handle form submission to send new messages
+window.form.addEventListener('submit', function (evt) {
+    evt.preventDefault();
 
-        window.fetch(`/chat?message=${window.input.value}`)
-        window.input.value = ''
-    })
+    // Send the new message to the server via fetch
+    window.fetch(`/chat?message=${window.input.value}`)
+        .then(() => {
+            window.input.value = ''; // Clear the input field after sending
+        })
+        .catch(err => console.error('Failed to send message:', err));
+});
   </script>
 </body>
 </html>
