@@ -14,6 +14,7 @@ app.get('/static/*', respondStatic)
 app.get('/chat', respondChat)
 app.get('/sse', respondSSE)
 app.get('/previous', respondPrevious)
+app.get('/logs', respondChatLog)
 
 
 
@@ -56,6 +57,13 @@ function respondSSE(req, res) {
         'Content-Type' : 'text/event-stream',
         'Connection' : 'keep-alive'
     })
+    const filename = `${__dirname}/chat-log.txt`
+    fs.readFile(filename, 'utf-8', (err, data) => {
+        if(!err && data) {
+            const message = data.split('\n').filter(Boolean);
+            message.forEach(msg => res.write(`data: ${msg}\n\n`));
+        }
+    });
 
     const onMessage = msg => res.write(`data: ${msg}\n\n`)
     chatEmitter.on('message', onMessage)
@@ -64,10 +72,33 @@ function respondSSE(req, res) {
     chatEmitter.off('message', onMessage)
 })
 }
-function respondPrevious(req, res) {
-    const { message } = req.query
 
-    fs.appendFile()
+function respondChatLog(req, res) {
+    const { message } = reg.query;
+
+    const filename = `${__dirname}/chat-log.txt`
+
+    fs.appendFile(filename, message + '\n', (err) => {
+        if (err) {
+            res.writeHead(500, {'Content-Type' : 'text/plain'});
+            res.end('Internal Server Error');
+        }
+        res.writeHead(200, {'Content-Type' : 'text/plain'});
+        res.end('Message logged');
+    })
+}
+
+function respondPrevious(req, res) {
+    const filename = `${__dirname}/chat-log.txt`
+    fs.readFile(filename, 'utf-8', (err, data) => {
+        if (err) {
+            res.writeHead(500, {'Content-Type' : 'text/plain'});
+            res.end('Error reading the file');
+        } else {
+            res.writeHead(200, {'Content-Type' : 'text/plain'});
+            res.end(data);
+        }
+    })
 }
 
 
@@ -75,5 +106,3 @@ function respondNotFound(req, res) {
     res.writeHead(404, {'Content-Type' : 'text/plain'})
     res.end('Not Found')
 }
-console.log(__dirname)
-console.log(__filename);
