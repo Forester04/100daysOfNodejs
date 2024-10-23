@@ -12,6 +12,9 @@
 </head>
 <body>
   <section class="container">
+    <div class="" id="previous">
+
+    </div>
     <div class="" id="messages">
       <h4>Chat messages</h4>
     </div>
@@ -28,8 +31,8 @@
           .then(previousMessages => {
               // Append the previous messages to the chat window
               if (previousMessages.trim()) { // Only add if there's content
-                  window.messages.innerHTML += `<p>Previous Chats:</p>`;
-                  window.messages.innerHTML += previousMessages
+                  window.previous.innerHTML += `<h4>Previous Chats:</h4>`;
+                  window.previous.innerHTML += previousMessages
                       .split('\n')
                       .filter(Boolean) // Remove any empty lines
                       .map(message => `<p>${message}</p>`) // Format each message as a paragraph
@@ -46,17 +49,26 @@
       };
     });
 
-// Step 3: Handle form submission to send new messages
-window.form.addEventListener('submit', function (evt) {
-    evt.preventDefault();
+    // Step 3: Handle form submission to send new messages to both endpoints
+    window.form.addEventListener('submit', function (evt) {
+        evt.preventDefault();
 
-    // Send the new message to the server via fetch
-    window.fetch(`/chat?message=${window.input.value}`)
-        .then(() => {
-            window.input.value = ''; // Clear the input field after sending
-        })
-        .catch(err => console.error('Failed to send message:', err));
-});
+        const message = window.input.value; 
+
+        // Send the new message to the chat endpoint
+        window.fetch(`/chat?message=${encodeURIComponent(message)}`)
+            .then(() => {
+                document.getElementById('input').value = ''; // Clear the input field
+                // Send the message to the logs endpoint
+                return window.fetch(`/logs?message=${encodeURIComponent(message)}`);
+            })
+            .then(() => {
+                console.log('Message sent to logs successfully');
+            })
+            .catch(err => console.error('Failed to send message:', err));
+        
+    });
+
   </script>
 </body>
 </html>

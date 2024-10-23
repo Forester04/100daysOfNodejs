@@ -13,8 +13,8 @@ app.get('/echo', respondEcho)
 app.get('/static/*', respondStatic)
 app.get('/chat', respondChat)
 app.get('/sse', respondSSE)
-app.get('/previous', respondPrevious)
 app.get('/logs', respondChatLog)
+app.get('/previous', respondPrevious)
 
 
 
@@ -57,13 +57,6 @@ function respondSSE(req, res) {
         'Content-Type' : 'text/event-stream',
         'Connection' : 'keep-alive'
     })
-    const filename = `${__dirname}/chat-log.txt`
-    fs.readFile(filename, 'utf-8', (err, data) => {
-        if(!err && data) {
-            const message = data.split('\n').filter(Boolean);
-            message.forEach(msg => res.write(`data: ${msg}\n\n`));
-        }
-    });
 
     const onMessage = msg => res.write(`data: ${msg}\n\n`)
     chatEmitter.on('message', onMessage)
@@ -74,20 +67,25 @@ function respondSSE(req, res) {
 }
 
 function respondChatLog(req, res) {
-    const { message } = reg.query;
+    const { message } = req.query
 
-    const filename = `${__dirname}/chat-log.txt`
 
-    fs.appendFile(filename, message + '\n', (err) => {
+    if (!message) {
+        res.status(400).send('Message is required'); // Handle missing message error
+        return;
+    }
+
+    const filename = `${__dirname}/chat-log.txt`;
+
+    fs.appendFile(filename, message + '\n\n', (err) => {
         if (err) {
-            res.writeHead(500, {'Content-Type' : 'text/plain'});
-            res.end('Internal Server Error');
+            console.log('Logging failed');
+        } else {
+            console.log('Logged Successfully');
         }
-        res.writeHead(200, {'Content-Type' : 'text/plain'});
-        res.end('Message logged');
     })
 }
-
+console.log(respondChatLog());
 function respondPrevious(req, res) {
     const filename = `${__dirname}/chat-log.txt`
     fs.readFile(filename, 'utf-8', (err, data) => {
@@ -100,7 +98,6 @@ function respondPrevious(req, res) {
         }
     })
 }
-
 
 function respondNotFound(req, res) {
     res.writeHead(404, {'Content-Type' : 'text/plain'})
