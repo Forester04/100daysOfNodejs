@@ -18,15 +18,9 @@ function respondChat(req, res) {
 }
 
 function respondEcho(req, res) {
-    const { input = ''} = querystring.parse(
-        req.url
-        .split('?')
-        .slice(1)
-        .join('')
-    );
-
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify({
+    const { input = ''} = req.query;
+    
+    res.json({
         normal: input,
         shouty: input.toUpperCase(),
         characterCount: input.length,
@@ -34,5 +28,5 @@ function respondEcho(req, res) {
         .split('')
         .reverse()
         .join('')
-    }))
+    })
 }
