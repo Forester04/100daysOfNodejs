@@ -81,22 +81,45 @@ try {
     console.error(err)
 }
 
-//To avoid overwriting add the { flag: a+} (to append a file)
-fs.writeFile('hello.txt', content , { flag: 'a+'}, err => {
+// Append data to files
+// Asyn appending
+
+const message = "Message to be appended";
+fs.appendFile('hello.txt', message + '\n\n', (err) => {
     if (err) {
-        console.error(err)
-        return
+        console.error(err);
     } else {
-        console.log('File written successfully')
+        console.error('Message appended successfully.');
     }
 })
 
-try {
-    fs.writeFileSync('hello.txt', content, { flag: 'a+'})
-    console.log('file successfully written')
-} catch (err) {
-    console.err(err)
-}
-// Using the above solution: This means that big files are going to have a major impact on your memory consumption and speed of execution of the program.
+// Sync appending
 
-// In this case, a better option is to read the file content using streams.
+try {
+    const newMessage = fs.appendFileSync('hello.txt', messege + '\n\n')
+    console.log(newMessage);
+} catch (err) {
+    console.error(err)
+}
+
+// Create and read directories, and explore directory manipulation functions
+
+const folderName = '100daysOfNodejs/tests'
+
+try {
+    if (!fs.existsSync(folderName)) {
+        fs.mkdirSync(folderName);
+    }
+} catch (err) {
+    console.error(err)
+}
+
+const foldername = '100daysOfNodejs/tests'
+
+// fs.readdirSync(foldername);
+
+fs.readdirSync(foldername).map(filename => {
+    return path.join(foldername, filename);
+})
+
+

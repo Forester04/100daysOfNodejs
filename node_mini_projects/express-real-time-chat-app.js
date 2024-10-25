@@ -13,7 +13,7 @@ app.get('/echo', respondEcho)
 app.get('/static/*', respondStatic)
 app.get('/chat', respondChat)
 app.get('/sse', respondSSE)
-app.get('/logs', respondChatLog)
+app.get('/logs', respondLogs)
 app.get('/previous', respondPrevious)
 
 
@@ -66,9 +66,8 @@ function respondSSE(req, res) {
 })
 }
 
-function respondChatLog(req, res) {
-    const { message } = req.query
-
+function respondLogs(req, res) {
+    const { message }  = req.query
 
     if (!message) {
         res.status(400).send('Message is required'); // Handle missing message error
@@ -85,7 +84,8 @@ function respondChatLog(req, res) {
         }
     })
 }
-console.log(respondChatLog());
+console.log(respondLogs());
+
 function respondPrevious(req, res) {
     const filename = `${__dirname}/chat-log.txt`
     fs.readFile(filename, 'utf-8', (err, data) => {
