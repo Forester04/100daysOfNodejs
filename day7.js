@@ -2,11 +2,13 @@
 // Implement simple routing for different HTTP endpoints
 
 const http = require('http');
+const querystring = require('querystring')
 
 const port = process.env.PORT || 1337;
 
 const server = http.createServer( function(req, res) {
     if (req.url == '/') return respondChat(req, res);
+    if (req.url.match(/^\/echo/)) return respondEcho(req, res);
     respondNotFound(req, res);
 })
 
@@ -20,4 +22,24 @@ function respondChat(req, res) {
 function respondNotFound(req, res) {
     res.writeHead(404, {'Content-Type' : 'text/plain'});
     res.end('Page Not Found');
+}
+
+function respondEcho(req, res) {
+    const { input = ''} = querystring.parse(
+        req.url
+        .split('?')
+        .slice(1)
+        .join('')
+    );
+
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({
+        normal: input,
+        shouty: input.toUpperCase(),
+        characterCount: input.length,
+        backwards: input
+        .split('')
+        .reverse()
+        .join('')
+    }))
 }
