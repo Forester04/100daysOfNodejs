@@ -3,7 +3,7 @@ const express = require('express');
 const port = process.env.PORT || 1337;
 const app = express();
 
-// middleware functions
+// middleware functions - they can either execute code, change respond or request, can end the req-cycle.
 app.use(express.json());
 
 const reqFilter = (req, res, next) => {
