@@ -4,7 +4,7 @@ const port = process.env.PORT || 1337;
 const app = express();
 
 // middleware functions
-app.use(express.json);
+app.use(express.json());
 
 const reqFilter = (req, res, next) => {
     console.log('reqFilter');
