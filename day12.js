@@ -19,3 +19,5 @@ app.get('/search', (req, res) => {
 
     res.send(`Search query ${queryTerm}, Category ${category}`);
 })
+
+app.listen(port, () => console.log(`Server listening on ${port}`));
