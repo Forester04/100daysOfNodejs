@@ -1,3 +1,8 @@
+// 100 Days of Nodejs challenges
+// Day 14 - JSON Web Tokens (JWT)
+// Implement basic JWT authentication in an  Express app
+
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
