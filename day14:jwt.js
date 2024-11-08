@@ -17,12 +17,12 @@ const secretKey = 'your_secret_key'
 
 // Middleware
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const validateRequest = (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        res.status(400).send({ errors: errors.array()});
+        res.status(400).send({ errors: errors.array() });
     }
     next();
 }
@@ -63,13 +63,13 @@ app.post('/login', (req, res) => {
     const { username, password } = req.body;
 
     if (username === user.username && password === user.password) {
-        const token = jwt.sign({ userId: user.id }, secretKey, { expiresIn: '1hr'});
+        const token = jwt.sign({ userId: user.id }, secretKey, { expiresIn: '1hr' });
 
         return res.status(201).send({ message: 'Logging in successful', token });
     } else {
         return res.status(400).send('Invalid username or password');
     }
-    
+
 })
 app.post('/book/:id',
     body('title').notEmpty().withMessage('Title required'),
