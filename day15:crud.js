@@ -5,8 +5,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
-const { MongoClient } = require('mongodb');
-const { validationResult } = require('express-validator');
+const { MongoClient, ObjectId } = require('mongodb');
+const { body, param, validationResult } = require('express-validator');
 
 const port = process.env.PORT || 1337;
 const app = express();
@@ -75,12 +75,44 @@ async function performCrudOperations() {
         await client.connect();
         const db = client.db(dbName);
 
-        // Create - Protected route to add book
+        // CREATE - Protected route to add book
         app.post('book',
             authenticateToken,
             [body('title').notEmpty().withMessage('Title required'),
-            body('author').notEmpty().withMessage("Author's name required"),
-            ]
+            body('author').notEmpty().withMessage("Author's name required")],
+            validateRequest,
+            async (req, res) => {
+                const { title, author } = req.body;
+                const result = await db.collection('books').insertOne({ title, author});
+                res.status(201).json({ message: 'Book added successfully'});
+            }
+        );
+
+        // READ - Protected route to read all books
+        app.get('/books', authenticateToken,
+            async (req, res) => {
+                const books = await db.collection('books').find().toArray();
+                res.status(200).json(books);
+            }
+        );
+
+        // UPDATE - Protected route to update a book by ID
+        app.put('/book/:id',
+            authenticateToken,
+            validateRequest,
+            [ body('title').optional().notEmpty().withMessage('Title required'),
+            body('author').optional().notEmpty().withMessage("Author's name required"), param('id').isMongoId().withMessage('Invalid book ID')
+            ],
+            async (req, res) => {
+                const { title, author } = req.body;
+                const { id } = req.params;
+
+                const update = {};
+                if (title) update.title = title;
+                if (author) update.author = author;
+
+                const result = await db.collection('books').updateOne({ _id: new inputId(id) }, { $set: update});
+            }
         )
     }
 }
