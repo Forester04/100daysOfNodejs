@@ -27,13 +27,7 @@ const dbName = 'library';
 // Setting up Middlewares
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true}))
-//Global validation 
-app.use((err, req, res) => {
-    if (err) {
-        console.error(err);
-        res.status(500).send('Internal Error');
-    }
-})
+
 const authenticateToken = (req, res, next) => {
     const token = req.header('authorization')?.split(' ')[1];
     if (!token) {
@@ -111,7 +105,16 @@ async function run() {
     
 }
 
-run().catch(console.error)
+run().catch(console.error);
+
+//Global validation 
+app.use((err, req, res,next) => {
+    if (err) {
+        console.error(err);
+        res.status(500).send('Internal Error');
+    }
+    next();
+})
 
 
 app.listen(port, () => console.log(`Server listening on ${port}`));
