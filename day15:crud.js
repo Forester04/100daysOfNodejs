@@ -63,11 +63,11 @@ app.get('/login', (req, res) => {
         res.status(200).json({ message: 'Successfully logged in'}, token);
     }
 })
+
+await client.connect()
+const db = client.db(dbName);
 async function run() {
     try {
-
-        await client.connect()
-        const db = client.db(dbName);
 
         // CREATE
         app.post('/book', authenticateToken, validateRequest, body('title').notEmpty().withMessage('Title field required'), body('author').notEmpty().withMessage('Auhtor field required'), async (req, res) => {
@@ -90,17 +90,17 @@ async function run() {
             const update = {};
             if (title) update.title = title;
             if (author) update.author = author;
-            const results = db.collection('books').updateOne({ _id: new ObjectId(id)}, {$set: update});
+            const results = db.collection('books').updateOne({ _id: ObjectId(id)}, {$set: update});
             if (results.matchedCount === 0) res.status(200).json({ message: 'Book not found'});
             res.status(200).json({message: 'Book Added successfully'});
 
         })
 
-        // DELETE
-        app.put('/book/:id', authenticateToken, validateRequest, param('id').isMongoId().withMessage('Invaid book ID'), (req, res) => {
+        // 
+        app.delete('/book/:id', authenticateToken, validateRequest, param('id').isMongoId().withMessage('Invaid book ID'), (req, res) => {
             const { id } = req.params;
 
-            const results = db.collection('books').deleteOne({ _id: new ObjectId(id)});
+            const results = db.collection('books').deleteOne({ _id: ObjectId(id)});
             if (results.deletedCount === 0) res.status(200).json({ message: 'Book not found'});
             res.status(200).json({message: 'Book deleted successfully'});
         })
