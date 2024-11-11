@@ -49,11 +49,5 @@ app.get('/', (req, res) => {
     res.status(200).send('Basic Authentication');
 })
 
-app.use((err, req, res, next) => {
-    if (err) {
-        console.error(err.stack);
-        res.status(500).send('Internal Error Occured');
-    }
-})
 
 app.listen(port, () => console.log(`Server listening on ${port}`));
