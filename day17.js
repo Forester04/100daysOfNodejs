@@ -5,14 +5,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8081;
 
 const app = express();
 
 // Dummy user
 const user = {
     username : 'John',
-    pasword : 'abcde123'
+    password : 'abcde123'
 }
 
 // middleware
@@ -48,4 +48,12 @@ app.use(authentication);
 app.get('/', (req, res) => {
     res.status(200).send('Basic Authentication');
 })
+
+app.use((err, req, res, next) => {
+    if (err) {
+        console.error(err.stack);
+        res.status(500).send('Internal Error Occured');
+    }
+})
+
 app.listen(port, () => console.log(`Server listening on ${port}`));
