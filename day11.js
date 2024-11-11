@@ -11,6 +11,6 @@ const serveStatic = require('serve-static');
 const port = process.env.PORT || 1337;
 const app = express();
 
-app.use(serveStatic('public/static', { index: ['default.html', 'default.htm']}))
+app.use((serveStatic('/public')));
 
 app.listen(port, () => console.log(`Server listening no ${port}`));

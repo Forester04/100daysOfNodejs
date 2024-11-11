@@ -65,10 +65,10 @@ app.get('/login', (req, res) => {
     if (username === user.username && password === user.password) {
         const token = jwt.sign({ userId: user.userId}, secretKey, { expiresIn: '1hr'});
 
-        res.status(200).json({ message: 'Successfully logged in'}, token);
+        return res.status(200).json({ message: 'Successfully logged in'}, token);
     }
    } catch (err) {
-    res.status(400).send('Broken authentication')
+    return res.status(400).send('Broken authentication')
    }
 })
 
@@ -124,7 +124,7 @@ run().catch(console.error);
 //Error Handling to handle errors passed to express 
 app.use((err, req, res, next) => {
     if (err) {
-        console.error(err);
+        console.error(err.stack);
         res.status(500).send('Internal Error');
     }
 })
