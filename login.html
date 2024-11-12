@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document - Login</title>
+    <style>
+        body {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .flex-container {
+            background-color: aliceblue;
+            border: 1px solid rgb(114, 114, 226);
+            padding: 2rem;
+            border-radius: 8px;
+            width: 400px;
+            max-width: 100%;
+        }
+        h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+        label, input {
+            width: 100%;
+            display: block;
+        }
+        label {
+            padding: 1rem 0;
+            font-weight: 500;
+        }
+        input {
+            padding: 1rem 0;
+            border: 1px solid gray;
+            border-radius: 6px;
+        }
+        .btn {
+            margin-top: 1rem;
+            border: none;
+            background-color: green;
+            color: #fff;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        .btn:hover {
+            background-color: rgb(32, 151, 32);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="flex-container">
+        <h1>Welcome Login to continue</h1>
+        <form action="/login" method="post">
+            <label for="username">Username</label>
+            <input type="text" name="username">
+            <label for="password">Password</label>
+            <input type="password" name="password">
+            <input type="submit" value="Login" class="btn">
+        </form>
+    </div>
+    <script src="/day18.js"></script>
+</body>
+</html>
