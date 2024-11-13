@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const fileUpload = require('express-fileupload');
+require('dotenv').config();
 
 const PORT = process.env.PORT || 1337;
 
@@ -20,7 +21,7 @@ const app = express();
 
 // Middleware
 app.use(session({
-    secret: 'your_secret_key',
+    secret: process.env.SECRET_KEY,
     resave: false,
     saveUninitialized: false,
     cookie: { secure: true }
