@@ -33,7 +33,7 @@ const authentication = (req, res, next) => {
     const username = auth[0];
     const password = auth[1];
 
-    if ( username === user.username && password === user.pasword) {
+    if ( username === user.username && password === user.password) {
 
         next();
     } else {
