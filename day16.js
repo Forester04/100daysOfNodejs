@@ -72,7 +72,7 @@ app.get('/login', (req, res) => {
    }
 })
 
-await client.connect()
+client.connect();
 const db = client.db(dbName);
 async function run() {
     try {

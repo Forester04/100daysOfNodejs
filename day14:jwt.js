@@ -12,7 +12,7 @@ const { body, param, validationResult } = require('express-validator');
 const port = process.env.PORT || 1337;
 const app = express();
 
-const secretKey = 'your_secret_key'
+const secretKey = 'your_secret_key';
 
 
 // Middleware
@@ -30,11 +30,11 @@ const validateRequest = (req, res, next) => {
 const authenticateToken = (req, res, next) => {
     const token = req.header('authorization')?.split(' ')[1];
     if (!token) {
-        res.status(403).send('Authentication Denied');
+            return res.status(403).send('Authentication Denied');
     }
     jwt.verify(token, secretKey, (err, decode) => {
         if (err) {
-            res.status(403).send('Authentication Denied');
+            return res.status(403).send('Authentication Denied');
         }
         req.user = decode;
         next();
@@ -58,6 +58,9 @@ const user = {
 
 app.get('/', (req, res) => {
     res.status(200).send('Book App: Simple RESTful API');
+});
+app.get('/login', (req, res) => {
+    res.sendFile(__dirname + '/login.html');
 });
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
