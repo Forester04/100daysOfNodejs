@@ -31,7 +31,7 @@ const fetchData = () => {
         setTimeout(() => {
             const data = { userId: user.userId, username: user.username};
             resolve(data);
-        })
+        }, 1000)
     })
 }
 
