@@ -7,7 +7,7 @@ const { WebSocketServer } = require('ws');
 
 require('dotenv').config();
 const PORT = 1337;
-const WS_PORT = 8081
+const WS_PORT = 8081;
 
 const app = express();
 
